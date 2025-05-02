@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Denuncia Anónima - Tlaxcala</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/denuncia.css" />
+  </head>
+  <body>
+    <div class="denuncia-container">
+      <header>
+        <img src="img/tlaxcala.png" alt="Escudo Tlaxcala" />
+        <div>
+          <h1>DENUNCIA ANÓNIMA</h1>
+          <p>Secretaría de Educación Pública de Tlaxcala</p>
+        </div>
+      </header>
+
+      <main>
+        <form id="denunciaForm">
+          <!-- Paso 1: Selección de escuela -->
+          <fieldset class="form-step" id="step1">
+            <legend><i class="ri-school-line"></i> Datos de la Escuela</legend>
+
+            <div class="input-group">
+              <label for="nivel">Nivel Educativo:</label>
+              <select id="nivel" required>
+                <option value="">Seleccione...</option>
+                <option value="preescolar">Preescolar</option>
+                <option value="primaria">Primaria</option>
+                <option value="secundaria">Secundaria</option>
+                <option value="bachillerato">Bachillerato</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="municipio">Municipio:</label>
+              <select id="municipio" required>
+                <option value="">Seleccione un municipio...</option>
+                <option value="amaxac-de-guerrero">Amaxac de Guerrero</option>
+                <option value="apetatitlan-de-antonio-carbajal">Apetatitlán de Antonio Carvajal</option>
+                <option value="atlangatepec">Atlangatepec</option>
+                <option value="altzayanca">Altzayanca</option>
+                <option value="apizaco">Apizaco</option>
+                <option value="calpulalpan">Calpulalpan</option>
+                <option value="chiautempan">Chiautempan</option>
+                <option value="contla-de-juan-cuamatzi">Contla de Juan Cuamatzi</option>
+                <option value="cuapiaxtla">Cuapiaxtla</option>
+                <option value="cuaxomulco">Cuaxomulco</option>
+                <option value="el-carmen-tequexquitla">El Carmen Tequexquitla</option>
+                <option value="emiliano-zapata">Emiliano Zapata</option>
+                <option value="espanita">Españita</option>
+                <option value="huamantla">Huamantla</option>
+                <option value="hueyotlipan">Hueyotlipan</option>
+                <option value="ixcotla">Ixtacuixtla de Mariano Matamoros</option>
+                <option value="ixtenco">Ixtenco</option>
+                <option value="mazatecochco-de-jose-maria-morelos">Mazatecochco de José María Morelos</option>
+                <option value="muñoz-de-domingo-arenas">Muñoz de Domingo Arenas</option>
+                <option value="nanacamilpa-de-mariano-arista">Nanacamilpa de Mariano Arista</option>
+                <option value="nacajuca">Nativitas</option>
+                <option value="panotla">Panotla</option>
+                <option value="papalotla-de-xicohtencatl">Papalotla de Xicohténcatl</option>
+                <option value="san-damian-texoloc">San Damián Texóloc</option>
+                <option value="san-francisco-tetlanohcan">San Francisco Tetlanohcan</option>
+                <option value="san-jeronimo-zacualpan">San Jerónimo Zacualpan</option>
+                <option value="san-jose-teacalco">San José Teacalco</option>
+                <option value="san-juan-huactzinco">San Juan Huactzinco</option>
+                <option value="san-lorenzo-axocomanitla">San Lorenzo Axocomanitla</option>
+                <option value="san-lucas-tecopilco">San Lucas Tecopilco</option>
+                <option value="san-pablo-del-monte">San Pablo del Monte</option>
+                <option value="sanctorum">Sanctórum</option>
+                <option value="santa-ana-nopalucan">Santa Ana Nopalucan</option>
+                <option value="santa-apolonia-teacalco">Santa Apolonia Teacalco</option>
+                <option value="santa-catarina-ayometla">Santa Catarina Ayometla</option>
+                <option value="santa-cruz-quilehtla">Santa Cruz Quilehtla</option>
+                <option value="santa-cruz-tlaxcala">Santa Cruz Tlaxcala</option>
+                <option value="santa-isabel-xiloxoxtla">Santa Isabel Xiloxoxtla</option>
+                <option value="tenancingo">Tenancingo</option>
+                <option value="teolocholco">Teolocholco</option>
+                <option value="tepetitla-de-lardizabal">Tepetitla de Lardizábal</option>
+                <option value="tepeyanco">Tepeyanco</option>
+                <option value="terrenate">Terrenate</option>
+                <option value="tetla-de-la-solidaridad">Tetla de la Solidaridad</option>
+                <option value="tetlatlahuca">Tetlatlahuca</option>
+                <option value="tlaxcala">Tlaxcala</option>
+                <option value="tlaxco">Tlaxco</option>
+                <option value="tocatlan">Tocatlán</option>
+                <option value="totolac">Totolac</option>
+                <option value="tzompantepec">Tzompantepec</option>
+                <option value="xaloztoc">Xaloztoc</option>
+                <option value="xaltocan">Xaltocan</option>
+                <option value="xicohtzinco">Xicohtzinco</option>
+                <option value="yauhquemehcan">Yauhquemehcan</option>
+                <option value="zacatelco">Zacatelco</option>
+                <option value="ziltlaltepec-de-trinidad-sanchez-santos">Ziltlaltépec de Trinidad Sánchez Santos</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="escuela">Nombre de la Escuela:</label>
+              <input
+                type="text"
+                id="escuela"
+                placeholder="Ej: Esc. Primaria Benito Juárez"
+                required
+              />
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="next-btn">
+                Siguiente <i class="ri-arrow-right-line"></i>
+              </button>
+            </div>
+          </fieldset>
+
+          <!-- Paso 2: Detalles de denuncia -->
+          <fieldset class="form-step" id="step2" style="display: none">
+            <legend>
+              <i class="ri-alarm-warning-line"></i> Detalles de la Denuncia
+            </legend>
+
+            <div class="input-group">
+              <label for="tipo">Tipo de Denuncia:</label>
+              <select id="tipo" required>
+                <option value="">Seleccione...</option>
+                <option value="acoso">Acoso escolar</option>
+                <option value="corrupcion">Corrupción</option>
+                <option value="infraestructura">
+                  Problemas de infraestructura
+                </option>
+                <option value="maltrato">Maltrato docente</option>
+              </select>
+            </div>
+
+            <div class="input-group">
+              <label for="fecha">Fecha del hecho:</label>
+              <input type="date" id="fecha" required />
+            </div>
+
+            <div class="input-group">
+              <label for="descripcion">Descripción detallada:</label>
+              <textarea id="descripcion" rows="5" required></textarea>
+            </div>
+
+            <div class="input-group">
+              <label for="pruebas">Adjuntar pruebas (opcional):</label>
+              <input
+                type="file"
+                id="pruebas"
+                multiple
+                accept="image/*,.pdf,.doc,.docx"
+              />
+            </div>
+
+            <div class="form-navigation">
+              <button type="button" class="prev-btn">
+                <i class="ri-arrow-left-line"></i> Anterior
+              </button>
+              <button type="submit" class="submit-btn">Enviar Denuncia</button>
+            </div>
+          </fieldset>
+        </form>
+
+        <div id="confirmation" style="display: none">
+          <div class="confirmation-box">
+            <i class="ri-checkbox-circle-line"></i>
+            <h2>¡Denuncia Recibida!</h2>
+            <p>
+              Su denuncia ha sido registrada con el folio:
+              <strong id="folioNumber">TLX-2023-0001</strong>
+            </p>
+            <p>Gracias por ayudar a mejorar la educación en Tlaxcala.</p>
+            <button id="newDenunciaBtn">Realizar otra denuncia</button>
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <p>
+          Sistema de Denuncias Anónimas - Gobierno del Estado de Tlaxcala
+          2021-2027
+        </p>
+        <p><i class="ri-shield-keyhole-line"></i> 100% confidencial</p>
+      </footer>
+    </div>
+
+    <script src="js/denuncia.js"></script>
+  </body>
+</html>
+<script>
+  // JavaScript para manejar la navegación entre pasos del formulario
+  const nextBtn = document.querySelector('.next-btn');
+  const prevBtn = document.querySelector('.prev-btn');
+  const submitBtn = document.querySelector('.submit-btn');
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const confirmation = document.getElementById('confirmation');
+  const newDenunciaBtn = document.getElementById('newDenunciaBtn');
+
+  nextBtn.addEventListener('click', () => {
+    step1.style.display = 'none';
+    step2.style.display = 'block';
+  });
+
+  prevBtn.addEventListener('click', () => {
+    step2.style.display = 'none';
+    step1.style.display = 'block';
+  });
+
+  submitBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    step2.style.display = 'none';
+    confirmation.style.display = 'block';
+  });
+
+  newDenunciaBtn.addEventListener('click', () => {
+    confirmation.style.display = 'none';
+    step1.style.display = 'block';
+    document.getElementById('denunciaForm').reset();
+  });

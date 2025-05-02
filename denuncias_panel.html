@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Denuncias - Panel de Control Tlaxcala</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6a1b9a;
+        --primary-light: #9c27b0;
+        --secondary: #ffab00;
+        --white: #ffffff;
+        --gray: #f5f5f5;
+        --dark-gray: #333333;
+        --success: #4caf50;
+        --warning: #ff9800;
+        --danger: #f44336;
+        --info: #2196f3;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        color: var(--dark-gray);
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        width: 280px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        padding: 20px 0;
+        position: fixed;
+        height: 100vh;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo img {
+        width: 120px;
+        height: auto;
+        margin-right: 15px;
+        object-fit: contain;
+      }
+
+      .logo h2 {
+        color: white;
+        font-size: 1.2rem;
+      }
+
+      nav ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+
+      nav ul li {
+        padding: 0;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 15px 25px;
+        transition: all 0.3s;
+      }
+
+      nav ul li i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+      }
+
+      nav ul li:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      nav ul li.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
+
+      .content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 30px;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .filter-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      select,
+      input,
+      button {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        font-size: 0.9rem;
+      }
+
+      button {
+        cursor: pointer;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .primary-btn {
+        background: var(--primary);
+        color: white;
+        border: none;
+      }
+
+      .primary-btn:hover {
+        background: var(--primary-light);
+      }
+
+      .secondary-btn {
+        background: var(--gray);
+        color: var(--dark-gray);
+        border: none;
+      }
+
+      .secondary-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .denuncias-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .denuncias-table th,
+      .denuncias-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      .denuncias-table th {
+        background: var(--gray);
+        font-weight: 600;
+        color: var(--dark-gray);
+      }
+
+      .denuncias-table tr:hover {
+        background: #f9f9f9;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+      }
+
+      .badge-pendiente {
+        background: #fff3e0;
+        color: var(--warning);
+      }
+
+      .badge-en-proceso {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      .badge-resuelta {
+        background: #e8f5e9;
+        color: var(--success);
+      }
+
+      .badge-cancelada {
+        background: #ffebee;
+        color: var(--danger);
+      }
+
+      .action-btn {
+        padding: 5px 10px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        margin-right: 5px;
+        font-size: 0.85rem;
+        transition: all 0.3s;
+      }
+
+      .view-btn {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      .edit-btn {
+        background: #fff3e0;
+        color: var(--warning);
+      }
+
+      .delete-btn {
+        background: #ffebee;
+        color: var(--danger);
+      }
+
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 5px;
+      }
+
+      .pagination button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+        background: white;
+      }
+
+      .pagination button.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      @media (max-width: 1200px) {
+        .denuncias-table {
+          font-size: 0.9rem;
+        }
+
+        .denuncias-table th,
+        .denuncias-table td {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+
+        .content {
+          margin-left: 0;
+          padding: 20px;
+        }
+
+        .filter-group {
+          flex-direction: column;
+          align-items: flex-start;
+          width: 100%;
+        }
+
+        .denuncias-table {
+          display: block;
+          overflow-x: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/tlaxcala.png" alt="Escudo Tlaxcala" />
+          <h2>PANEL DE CONTROL</h2>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="dashboard.html" class="nav-link">
+                <i class="ri-dashboard-line"></i> Dashboard
+              </a>
+            </li>
+            <li class="active">
+              <a href="denuncias_panel.html" class="nav-link">
+                <i class="ri-alarm-warning-line"></i> Denuncias
+              </a>
+            </li>
+            <li>
+              <a href="usuarios.html" class="nav-link">
+                <i class="ri-user-settings-line"></i> Usuarios
+              </a>
+            </li>
+            <li>
+              <a href="reportes.html" class="nav-link">
+                <i class="ri-file-chart-line"></i> Reportes
+              </a>
+            </li>
+            <li>
+              <a href="configuracion.html" class="nav-link">
+                <i class="ri-settings-3-line"></i> Configuración
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header>
+          <h1><i class="ri-alarm-warning-line"></i> Gestión de Denuncias</h1>
+          <button id="logoutBtn" class="primary-btn">
+            <i class="ri-logout-box-r-line"></i> Cerrar Sesión
+          </button>
+        </header>
+
+        <div class="filter-bar">
+          <div class="filter-group">
+            <select>
+              <option>Todas las denuncias</option>
+              <option>Pendientes</option>
+              <option>En proceso</option>
+              <option>Resueltas</option>
+            </select>
+            <select>
+              <option>Todos los municipios</option>
+              <option>Tlaxcala</option>
+              <option>Apizaco</option>
+              <option>Huamantla</option>
+              <option>Chiautempan</option>
+            </select>
+            <input type="text" placeholder="Buscar denuncia..." />
+          </div>
+          <button class="primary-btn">
+            <i class="ri-add-line"></i> Nueva Denuncia
+          </button>
+        </div>
+
+        <table class="denuncias-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Fecha</th>
+              <th>Escuela</th>
+              <th>Municipio</th>
+              <th>Tipo</th>
+              <th>Estatus</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>#2457</td>
+              <td>15/05/2023</td>
+              <td>Primaria Benito Juárez</td>
+              <td>Tlaxcala</td>
+              <td>Bullying</td>
+              <td><span class="badge badge-en-proceso">En proceso</span></td>
+              <td>
+                <button class="action-btn view-btn">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="action-btn edit-btn">
+                  <i class="ri-edit-line"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>#2456</td>
+              <td>14/05/2023</td>
+              <td>Secundaria Técnica 1</td>
+              <td>Apizaco</td>
+              <td>Falta de materiales</td>
+              <td><span class="badge badge-pendiente">Pendiente</span></td>
+              <td>
+                <button class="action-btn view-btn">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="action-btn edit-btn">
+                  <i class="ri-edit-line"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>#2455</td>
+              <td>13/05/2023</td>
+              <td>Preparatoria Oficial</td>
+              <td>Huamantla</td>
+              <td>Infraestructura</td>
+              <td><span class="badge badge-resuelta">Resuelta</span></td>
+              <td>
+                <button class="action-btn view-btn">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="action-btn edit-btn">
+                  <i class="ri-edit-line"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>#2454</td>
+              <td>12/05/2023</td>
+              <td>Jardín de Niños Rosaura Zapata</td>
+              <td>Chiautempan</td>
+              <td>Otros</td>
+              <td><span class="badge badge-cancelada">Cancelada</span></td>
+              <td>
+                <button class="action-btn view-btn">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="action-btn edit-btn">
+                  <i class="ri-edit-line"></i>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td>#2453</td>
+              <td>11/05/2023</td>
+              <td>Primaria Miguel Hidalgo</td>
+              <td>Contla</td>
+              <td>Bullying</td>
+              <td><span class="badge badge-en-proceso">En proceso</span></td>
+              <td>
+                <button class="action-btn view-btn">
+                  <i class="ri-eye-line"></i>
+                </button>
+                <button class="action-btn edit-btn">
+                  <i class="ri-edit-line"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination">
+          <button><i class="ri-arrow-left-s-line"></i></button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Simulación de datos dinámicos
+      document.addEventListener("DOMContentLoaded", function () {
+        // Actualizar contador de denuncias pendientes
+        setInterval(() => {
+          const pendientes = document.querySelectorAll(".badge-pendiente");
+          pendientes.forEach((badge) => {
+            if (Math.random() > 0.7) {
+              badge.className = "badge badge-en-proceso";
+              badge.textContent = "En proceso";
+            }
+          });
+        }, 5000);
+
+        // Botones de acción
+        document.querySelectorAll(".view-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            alert("Mostrando detalles de la denuncia");
+          });
+        });
+
+        document.querySelectorAll(".edit-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            alert("Editando denuncia");
+          });
+        });
+
+        // Logout
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+          if (confirm("¿Está seguro que desea cerrar sesión?")) {
+            alert("Sesión cerrada correctamente");
+            // Redirección a login
+            window.location.href = "login.html"; // Asegúrate de tener esta página
+          }
+        });
+
+        // Resaltar elemento activo en el menú
+        const currentPage = window.location.pathname.split("/").pop();
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          if (link.getAttribute("href") === currentPage) {
+            link.parentElement.classList.add("active");
+          } else {
+            link.parentElement.classList.remove("active");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

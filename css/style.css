@@ -1,0 +1,281 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap");
+
+/* ===== VARIABLES ===== */
+:root {
+  --neon-color: #c724f1;
+  --neon-dark: #9d00d3;
+  --bg-dark: #120822;
+  --bg-gradient: linear-gradient(135deg, #16002b, #2a0a4a);
+  --glass-bg: rgba(39, 0, 65, 0.25);
+  --glass-border: rgba(199, 36, 241, 0.2);
+  --text-light: #f5e6ff;
+  --text-gray: #d9d9d9;
+  --shadow: 0 8px 32px rgba(199, 36, 241, 0.1);
+}
+
+/* ===== BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+/* ===== CONTAINER ===== */
+.container {
+  display: flex;
+  max-width: 1000px;
+  width: 100%;
+  min-height: 600px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+/* ===== IMAGE SECTION ===== */
+.image-section {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--bg-dark);
+  position: relative;
+}
+
+.optimized-image {
+  height: 450px; /* Altura fija en píxeles */
+  width: auto;
+  max-width: 100%; /* Evita desbordamiento */
+  object-fit: contain;
+  object-position: center;
+}
+
+/* ===== FORM SECTION ===== */
+.form-section {
+  width: 50%;
+  padding: 50px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ===== LOGIN FORM ===== */
+.login-form {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.login-title {
+  font-size: 2.5rem;
+  color: var(--neon-color);
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 0 15px rgba(199, 36, 241, 0.7);
+  position: relative;
+  letter-spacing: 2px;
+}
+
+.login-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 3px;
+  background: var(--neon-color);
+  border-radius: 3px;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 40px;
+  font-weight: 300;
+  letter-spacing: 1px;
+}
+
+.login-subtitle span {
+  font-weight: 600;
+}
+
+/* ===== INPUTS ===== */
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(199, 36, 241, 0.3);
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: var(--neon-color);
+  box-shadow: 0 0 0 2px rgba(199, 36, 241, 0.2);
+}
+
+.input-group label {
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  color: var(--text-gray);
+  transition: all 0.3s;
+  pointer-events: none;
+  font-size: 16px;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -10px;
+  left: 10px;
+  font-size: 0.8rem;
+  background: var(--bg-dark);
+  padding: 0 5px;
+  color: var(--neon-color);
+}
+
+.input-group i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-gray);
+}
+
+/* ===== BUTTON ===== */
+.neon-btn {
+  width: 100%;
+  padding: 15px;
+  background: var(--bg-dark);
+  color: var(--neon-color);
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s;
+  animation: pulse 2s infinite;
+}
+
+.neon-btn:hover {
+  background: var(--neon-color);
+  color: var(--bg-dark);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(199, 36, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(199, 36, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(199, 36, 241, 0);
+  }
+}
+
+/* ===== FOOTER ===== */
+.login-footer {
+  margin-top: 40px;
+  position: relative;
+  text-align: center;
+  color: var(--text-gray);
+  font-size: 14px;
+}
+
+.wave {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" fill="%23c724f1" opacity=".25"/></svg>');
+  background-size: cover;
+}
+
+/* ===== PARTÍCULAS ===== */
+.particle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: var(--neon-color);
+  border-radius: 50%;
+  opacity: 0.5;
+  animation: float 15s infinite linear;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    min-height: auto;
+  }
+
+  .image-section,
+  .form-section {
+    width: 100%;
+  }
+
+  .image-section {
+    height: 200px;
+  }
+
+  .optimized-image {
+    height: 90%;
+  }
+
+  .form-section {
+    padding: 30px;
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(100px);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .optimized-image {
+    height: 280px; /* Tamaño para móviles */
+  }
+}
+@media (max-width: 480px) {
+  .optimized-image {
+    height: 200px; /* Tamaño para pantallas más pequeñas */
+  }
+}

@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Usuarios - Panel Tlaxcala</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6a1b9a;
+        --primary-light: #9c27b0;
+        --primary-dark: #4a148c;
+        --secondary: #ffab00;
+        --white: #ffffff;
+        --gray: #f5f5f5;
+        --dark-gray: #333333;
+        --success: #4caf50;
+        --danger: #f44336;
+        --info: #2196f3;
+        --warning: #ff9800;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        color: var(--dark-gray);
+        line-height: 1.6;
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar idéntico a las otras páginas */
+      .sidebar {
+        width: 280px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        padding: 20px 0;
+        position: fixed;
+        height: 100vh;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        object-fit: contain;
+      }
+
+      .logo h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      nav ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+
+      nav ul li {
+        padding: 0;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 15px 25px;
+        transition: all 0.3s;
+      }
+
+      nav ul li i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+      }
+
+      nav ul li:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      nav ul li.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
+
+      /* Contenido principal */
+      .content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 30px;
+        background-color: #f5f7fa;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .header-actions {
+        display: flex;
+        gap: 15px;
+      }
+
+      /* Estilos para botones */
+      button {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+      }
+
+      .primary-btn {
+        background: var(--primary);
+        color: white;
+      }
+
+      .primary-btn:hover {
+        background: var(--primary-light);
+      }
+
+      .secondary-btn {
+        background: var(--gray);
+        color: var(--dark-gray);
+      }
+
+      .secondary-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .danger-btn {
+        background: var(--danger);
+        color: white;
+      }
+
+      .danger-btn:hover {
+        background: #d32f2f;
+      }
+
+      /* Filtros y búsqueda */
+      .user-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 15px;
+      }
+
+      .search-box {
+        display: flex;
+        align-items: center;
+        background: white;
+        border-radius: 6px;
+        padding: 8px 15px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        flex-grow: 1;
+        max-width: 400px;
+      }
+
+      .search-box input {
+        border: none;
+        outline: none;
+        padding: 8px;
+        width: 100%;
+        font-size: 0.9rem;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      select {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        font-size: 0.9rem;
+        background: white;
+      }
+
+      /* Tabla de usuarios */
+      .users-table-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background: var(--gray);
+        font-weight: 600;
+        color: var(--dark-gray);
+        position: sticky;
+        top: 0;
+      }
+
+      tr:hover {
+        background: #f9f9f9;
+      }
+
+      /* Badges para estados */
+      .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .badge-admin {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      .badge-user {
+        background: #e8f5e9;
+        color: var(--success);
+      }
+
+      .badge-inactive {
+        background: #ffebee;
+        color: var(--danger);
+      }
+
+      .badge-pending {
+        background: #fff3e0;
+        color: var(--warning);
+      }
+
+      /* Acciones */
+      .actions-cell {
+        display: flex;
+        gap: 8px;
+      }
+
+      .action-btn {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+      }
+
+      .edit-btn {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      .edit-btn:hover {
+        background: #bbdefb;
+      }
+
+      .delete-btn {
+        background: #ffebee;
+        color: var(--danger);
+      }
+
+      .delete-btn:hover {
+        background: #ffcdd2;
+      }
+
+      .view-btn {
+        background: #e8f5e9;
+        color: var(--success);
+      }
+
+      .view-btn:hover {
+        background: #c8e6c9;
+      }
+
+      /* Paginación */
+      .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 8px;
+      }
+
+      .pagination button {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: white;
+        border: 1px solid #ddd;
+      }
+
+      .pagination button.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+      }
+
+      /* Modal (simulado) */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 600px;
+        padding: 30px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .content {
+          padding: 20px;
+        }
+
+        th,
+        td {
+          padding: 12px 10px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+
+        .content {
+          margin-left: 0;
+        }
+
+        nav ul {
+          display: flex;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        nav ul li {
+          white-space: nowrap;
+        }
+
+        .logo {
+          justify-content: center;
+        }
+
+        .logo h2 {
+          display: none;
+        }
+
+        .user-controls {
+          flex-direction: column;
+        }
+
+        .search-box {
+          max-width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar consistente con las otras páginas -->
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/tlaxcala.png" alt="Escudo Tlaxcala" />
+          <h2>PANEL DE CONTROL</h2>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="dashboard.html" class="nav-link">
+                <i class="ri-dashboard-line"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="denuncias_panel.html" class="nav-link">
+                <i class="ri-alarm-warning-line"></i> Denuncias
+              </a>
+            </li>
+            <li class="active">
+              <a href="usuarios.html" class="nav-link">
+                <i class="ri-user-settings-line"></i> Usuarios
+              </a>
+            </li>
+            <li>
+              <a href="reportes.html" class="nav-link">
+                <i class="ri-file-chart-line"></i> Reportes
+              </a>
+            </li>
+            <li>
+              <a href="configuracion.html" class="nav-link">
+                <i class="ri-settings-3-line"></i> Configuración
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header>
+          <h1><i class="ri-user-settings-line"></i> Gestión de Usuarios</h1>
+          <div class="header-actions">
+            <button class="secondary-btn">
+              <i class="ri-download-line"></i> Exportar
+            </button>
+            <button class="primary-btn" id="addUserBtn">
+              <i class="ri-user-add-line"></i> Nuevo Usuario
+            </button>
+          </div>
+        </header>
+
+        <!-- Controles de búsqueda y filtrado -->
+        <div class="user-controls">
+          <div class="search-box">
+            <i class="ri-search-line"></i>
+            <input type="text" placeholder="Buscar usuarios..." />
+          </div>
+          <div class="filter-group">
+            <select>
+              <option>Todos los roles</option>
+              <option>Administrador</option>
+              <option>Usuario</option>
+            </select>
+            <select>
+              <option>Todos los estados</option>
+              <option>Activo</option>
+              <option>Inactivo</option>
+              <option>Pendiente</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tabla de usuarios -->
+        <div class="users-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Último acceso</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>María González</td>
+                <td>maria.gonzalez@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-admin">Administrador</span></td>
+                <td><span class="badge badge-user">Activo</span></td>
+                <td>Hoy, 09:45 AM</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Juan Pérez</td>
+                <td>juan.perez@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-user">Usuario</span></td>
+                <td><span class="badge badge-user">Activo</span></td>
+                <td>Ayer, 04:30 PM</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Ana Sánchez</td>
+                <td>ana.sanchez@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-user">Usuario</span></td>
+                <td><span class="badge badge-inactive">Inactivo</span></td>
+                <td>15/05/2023</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Carlos Ruiz</td>
+                <td>carlos.ruiz@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-admin">Administrador</span></td>
+                <td><span class="badge badge-user">Activo</span></td>
+                <td>Hoy, 11:20 AM</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Laura Méndez</td>
+                <td>laura.mendez@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-user">Usuario</span></td>
+                <td><span class="badge badge-pending">Pendiente</span></td>
+                <td>Nunca</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Pedro Hernández</td>
+                <td>pedro.hernandez@tlaxcala.edu.mx</td>
+                <td><span class="badge badge-user">Usuario</span></td>
+                <td><span class="badge badge-user">Activo</span></td>
+                <td>14/05/2023</td>
+                <td class="actions-cell">
+                  <button class="action-btn view-btn" title="Ver">
+                    <i class="ri-eye-line"></i>
+                  </button>
+                  <button class="action-btn edit-btn" title="Editar">
+                    <i class="ri-edit-line"></i>
+                  </button>
+                  <button class="action-btn delete-btn" title="Eliminar">
+                    <i class="ri-delete-bin-line"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Paginación -->
+        <div class="pagination">
+          <button><i class="ri-arrow-left-s-line"></i></button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <button><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+
+        <!-- Modal para nuevo usuario (simulado) -->
+        <div class="modal" id="userModal">
+          <div class="modal-content">
+            <h2><i class="ri-user-add-line"></i> Nuevo Usuario</h2>
+            <!-- Formulario de usuario iría aquí -->
+            <div
+              style="
+                margin-top: 30px;
+                display: flex;
+                justify-content: flex-end;
+                gap: 10px;
+              "
+            >
+              <button class="secondary-btn" id="cancelBtn">Cancelar</button>
+              <button class="primary-btn">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // JavaScript para funcionalidad básica
+      document.addEventListener("DOMContentLoaded", function () {
+        // Resaltar elemento activo en el menú
+        const currentPage = location.pathname.split("/").pop();
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          if (link.getAttribute("href") === currentPage) {
+            link.parentElement.classList.add("active");
+          } else {
+            link.parentElement.classList.remove("active");
+          }
+        });
+
+        // Modal de nuevo usuario
+        const addUserBtn = document.getElementById("addUserBtn");
+        const userModal = document.getElementById("userModal");
+        const cancelBtn = document.getElementById("cancelBtn");
+
+        if (addUserBtn && userModal && cancelBtn) {
+          addUserBtn.addEventListener("click", () => {
+            userModal.style.display = "flex";
+          });
+
+          cancelBtn.addEventListener("click", () => {
+            userModal.style.display = "none";
+          });
+
+          // Cerrar modal al hacer clic fuera del contenido
+          userModal.addEventListener("click", (e) => {
+            if (e.target === userModal) {
+              userModal.style.display = "none";
+            }
+          });
+        }
+
+        // Simular datos dinámicos (ejemplo: cambiar estado aleatorio)
+        setInterval(() => {
+          const badges = document.querySelectorAll(
+            ".badge-user, .badge-inactive, .badge-pending"
+          );
+          badges.forEach((badge) => {
+            if (Math.random() > 0.9) {
+              // 10% de probabilidad de cambiar
+              const states = ["badge-user", "badge-inactive", "badge-pending"];
+              const currentState = badge.className.split(" ")[1];
+              let newState;
+
+              do {
+                newState = states[Math.floor(Math.random() * states.length)];
+              } while (newState === currentState);
+
+              badge.className = `badge ${newState}`;
+              badge.textContent =
+                newState === "badge-user"
+                  ? "Activo"
+                  : newState === "badge-inactive"
+                  ? "Inactivo"
+                  : "Pendiente";
+            }
+          });
+        }, 5000);
+      });
+
+      // Función para confirmar eliminación
+      function confirmDelete(userName) {
+        return confirm(
+          `¿Está seguro que desea eliminar al usuario ${userName}? Esta acción no se puede deshacer.`
+        );
+      }
+    </script>
+  </body>
+</html>

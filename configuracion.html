@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Configuración - Panel Tlaxcala</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6a1b9a;
+        --primary-light: #9c27b0;
+        --primary-dark: #4a148c;
+        --secondary: #ffab00;
+        --white: #ffffff;
+        --gray: #f5f5f5;
+        --dark-gray: #333333;
+        --success: #4caf50;
+        --danger: #f44336;
+        --info: #2196f3;
+        --warning: #ff9800;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        color: var(--dark-gray);
+        line-height: 1.6;
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar consistente */
+      .sidebar {
+        width: 280px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        padding: 20px 0;
+        position: fixed;
+        height: 100vh;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        object-fit: contain;
+      }
+
+      .logo h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      nav ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+
+      nav ul li {
+        padding: 0;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 15px 25px;
+        transition: all 0.3s;
+      }
+
+      nav ul li i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+      }
+
+      nav ul li:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      nav ul li.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
+
+      /* Contenido principal */
+      .content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 30px;
+        background-color: #f5f7fa;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Pestañas de configuración */
+      .config-tabs {
+        display: flex;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+      }
+
+      .tab-btn {
+        padding: 12px 20px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        color: var(--dark-gray);
+        position: relative;
+      }
+
+      .tab-btn.active {
+        color: var(--primary);
+        font-weight: 500;
+      }
+
+      .tab-btn.active::after {
+        content: "";
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--primary);
+      }
+
+      /* Paneles de configuración */
+      .config-panel {
+        display: none;
+        background: white;
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        margin-bottom: 30px;
+      }
+
+      .config-panel.active {
+        display: block;
+      }
+
+      .config-panel h2 {
+        font-size: 1.4rem;
+        color: var(--primary);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Formularios de configuración */
+      .form-group {
+        margin-bottom: 25px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+      }
+
+      .form-group input,
+      .form-group select,
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+      }
+
+      .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 20px;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+      }
+
+      /* Switch de toggle */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .slider {
+        background-color: var(--primary);
+      }
+
+      input:checked + .slider:before {
+        transform: translateX(26px);
+      }
+
+      .toggle-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      /* Botones */
+      .btn {
+        padding: 12px 24px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-primary {
+        background: var(--primary);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-light);
+      }
+
+      .btn-secondary {
+        background: var(--gray);
+        color: var(--dark-gray);
+      }
+
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .content {
+          padding: 20px;
+        }
+
+        .form-row {
+          flex-direction: column;
+          gap: 0;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+
+        .content {
+          margin-left: 0;
+        }
+
+        nav ul {
+          display: flex;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        nav ul li {
+          white-space: nowrap;
+        }
+
+        .logo {
+          justify-content: center;
+        }
+
+        .logo h2 {
+          display: none;
+        }
+
+        .config-tabs {
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        .tab-btn {
+          white-space: nowrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar consistente -->
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/tlaxcala.png" alt="Escudo Tlaxcala" />
+          <h2>PANEL DE CONTROL</h2>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="dashboard.html" class="nav-link">
+                <i class="ri-dashboard-line"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="denuncias_panel.html" class="nav-link">
+                <i class="ri-alarm-warning-line"></i> Denuncias
+              </a>
+            </li>
+            <li>
+              <a href="usuarios.html" class="nav-link">
+                <i class="ri-user-settings-line"></i> Usuarios
+              </a>
+            </li>
+            <li>
+              <a href="reportes.html" class="nav-link">
+                <i class="ri-file-chart-line"></i> Reportes
+              </a>
+            </li>
+            <li class="active">
+              <a href="configuracion.html" class="nav-link">
+                <i class="ri-settings-3-line"></i> Configuración
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header>
+          <h1><i class="ri-settings-3-line"></i> Configuración del Sistema</h1>
+          <button class="btn-primary" id="saveSettingsBtn">
+            <i class="ri-save-line"></i> Guardar Cambios
+          </button>
+        </header>
+
+        <!-- Pestañas de configuración -->
+        <div class="config-tabs">
+          <button class="tab-btn active" data-tab="general">General</button>
+          <button class="tab-btn" data-tab="notificaciones">
+            Notificaciones
+          </button>
+          <button class="tab-btn" data-tab="seguridad">Seguridad</button>
+          <button class="tab-btn" data-tab="integraciones">
+            Integraciones
+          </button>
+          <button class="tab-btn" data-tab="avanzado">Avanzado</button>
+        </div>
+
+        <!-- Panel de Configuración General -->
+        <div class="config-panel active" id="general-panel">
+          <h2><i class="ri-tools-line"></i> Configuración General</h2>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="system-name">Nombre del Sistema</label>
+              <input
+                type="text"
+                id="system-name"
+                value="Sistema de Denuncias Tlaxcala"
+              />
+            </div>
+            <div class="form-group">
+              <label for="timezone">Zona Horaria</label>
+              <select id="timezone">
+                <option value="-6">(UTC-06:00) Centro (CDT)</option>
+                <option value="-5">(UTC-05:00) Este (EST)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="logo-upload">Logo del Sistema</label>
+            <input type="file" id="logo-upload" accept="image/*" />
+            <p class="help-text">
+              Tamaño recomendado: 300x100 px (formato PNG)
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label>Mantenimiento</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="maintenance-mode" />
+                <span class="slider"></span>
+              </label>
+              <span>Modo mantenimiento activado</span>
+            </div>
+            <p class="help-text">
+              Cuando está activado, solo los administradores pueden acceder al
+              sistema
+            </p>
+          </div>
+        </div>
+
+        <!-- Panel de Notificaciones -->
+        <div class="config-panel" id="notificaciones-panel">
+          <h2>
+            <i class="ri-notification-3-line"></i> Configuración de
+            Notificaciones
+          </h2>
+
+          <div class="form-group">
+            <label>Notificaciones por Email</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="email-notifications" checked />
+                <span class="slider"></span>
+              </label>
+              <span>Activar notificaciones por email</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email-sender">Email del Remitente</label>
+            <input
+              type="email"
+              id="email-sender"
+              value="no-reply@tlaxcala.edu.mx"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Notificaciones en Sistema</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="system-notifications" checked />
+                <span class="slider"></span>
+              </label>
+              <span>Mostrar notificaciones en el panel</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tipos de Notificaciones</label>
+            <div style="display: flex; flex-direction: column; gap: 10px">
+              <label style="display: flex; align-items: center; gap: 10px">
+                <input type="checkbox" checked /> Nuevas denuncias
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px">
+                <input type="checkbox" checked /> Actualizaciones de estado
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px">
+                <input type="checkbox" checked /> Reportes generados
+              </label>
+              <label style="display: flex; align-items: center; gap: 10px">
+                <input type="checkbox" /> Actividad de usuarios
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Seguridad -->
+        <div class="config-panel" id="seguridad-panel">
+          <h2>
+            <i class="ri-shield-keyhole-line"></i> Configuración de Seguridad
+          </h2>
+
+          <div class="form-group">
+            <label>Requerir autenticación en dos pasos</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="two-factor-auth" />
+                <span class="slider"></span>
+              </label>
+              <span>Activar para todos los administradores</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password-policy">Política de contraseñas</label>
+            <select id="password-policy">
+              <option value="basic">Básica (6 caracteres mínimo)</option>
+              <option value="medium" selected>
+                Media (8 caracteres, mayúsculas y números)
+              </option>
+              <option value="high">
+                Alta (10 caracteres, complejidad requerida)
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="session-timeout">Tiempo de sesión inactiva</label>
+            <select id="session-timeout">
+              <option value="15">15 minutos</option>
+              <option value="30" selected>30 minutos</option>
+              <option value="60">1 hora</option>
+              <option value="120">2 horas</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Registro de actividad</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="activity-logging" checked />
+                <span class="slider"></span>
+              </label>
+              <span>Guardar registro detallado de actividades</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel de Integraciones -->
+        <div class="config-panel" id="integraciones-panel">
+          <h2><i class="ri-plug-line"></i> Integraciones</h2>
+
+          <div class="form-group">
+            <label>API del Sistema</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="api-access" />
+                <span class="slider"></span>
+              </label>
+              <span>Habilitar acceso a la API</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="api-key">Clave de API</label>
+            <div style="display: flex; gap: 10px">
+              <input
+                type="text"
+                id="api-key"
+                value="tlx_sk_test_51a2b3c4e8b7"
+                readonly
+                style="flex: 1"
+              />
+              <button class="btn-secondary">
+                <i class="ri-refresh-line"></i> Regenerar
+              </button>
+            </div>
+            <p class="help-text">
+              Esta clave permite acceder a los datos del sistema desde
+              aplicaciones externas
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label>Integración con Google Workspace</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="google-integration" />
+                <span class="slider"></span>
+              </label>
+              <span>Habilitar autenticación con Google</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Integración con Microsoft 365</label>
+            <div class="toggle-container">
+              <label class="switch">
+                <input type="checkbox" id="microsoft-integration" />
+                <span class="slider"></span>
+              </label>
+              <span>Habilitar autenticación con Microsoft</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Panel Avanzado -->
+        <div class="config-panel" id="avanzado-panel">
+          <h2><i class="ri-code-line"></i> Configuración Avanzada</h2>
+
+          <div class="form-group">
+            <label for="backup-frequency">Frecuencia de respaldos</label>
+            <select id="backup-frequency">
+              <option value="daily">Diario</option>
+              <option value="weekly" selected>Semanal</option>
+              <option value="monthly">Mensual</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Ubicación de respaldos</label>
+            <div style="display: flex; gap: 10px">
+              <input
+                type="text"
+                value="/var/backups/tlaxcala"
+                style="flex: 1"
+              />
+              <button class="btn-secondary">
+                <i class="ri-folder-open-line"></i> Explorar
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="log-level">Nivel de registro (logs)</label>
+            <select id="log-level">
+              <option value="error">Solo errores</option>
+              <option value="warning" selected>Advertencias y errores</option>
+              <option value="info">Información completa</option>
+              <option value="debug">Depuración (detallado)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="custom-css">CSS Personalizado</label>
+            <textarea
+              id="custom-css"
+              placeholder="Agrega estilos CSS personalizados aquí..."
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Acciones -->
+        <div
+          style="
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+          "
+        >
+          <button class="btn-secondary">
+            <i class="ri-close-line"></i> Cancelar
+          </button>
+          <button class="btn-primary">
+            <i class="ri-save-line"></i> Guardar Cambios
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Resaltar elemento activo en el menú
+        const currentPage = location.pathname.split("/").pop();
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          if (link.getAttribute("href") === currentPage) {
+            link.parentElement.classList.add("active");
+          } else {
+            link.parentElement.classList.remove("active");
+          }
+        });
+
+        // Navegación por pestañas
+        const tabButtons = document.querySelectorAll(".tab-btn");
+        const tabPanels = document.querySelectorAll(".config-panel");
+
+        tabButtons.forEach((button) => {
+          button.addEventListener("click", () => {
+            // Remover clase active de todos los botones y paneles
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            tabPanels.forEach((panel) => panel.classList.remove("active"));
+
+            // Agregar clase active al botón clickeado
+            button.classList.add("active");
+
+            // Mostrar el panel correspondiente
+            const tabId = button.getAttribute("data-tab");
+            document.getElementById(`${tabId}-panel`).classList.add("active");
+          });
+        });
+
+        // Simular guardado de configuración
+        document
+          .getElementById("saveSettingsBtn")
+          .addEventListener("click", function () {
+            alert("Configuración guardada correctamente");
+          });
+
+        // Simular regeneración de API key
+        document
+          .querySelector('[aria-label="Regenerar API key"]')
+          ?.addEventListener("click", function (e) {
+            e.preventDefault();
+            const newKey =
+              "tlx_sk_" +
+              Math.random().toString(36).substring(2, 15) +
+              Math.random().toString(36).substring(2, 15);
+            document.getElementById("api-key").value = newKey;
+            alert("Nueva clave de API generada");
+          });
+      });
+    </script>
+  </body>
+</html>

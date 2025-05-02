@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reportes - Panel Tlaxcala</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6a1b9a;
+        --primary-light: #9c27b0;
+        --primary-dark: #4a148c;
+        --secondary: #ffab00;
+        --white: #ffffff;
+        --gray: #f5f5f5;
+        --dark-gray: #333333;
+        --success: #4caf50;
+        --danger: #f44336;
+        --info: #2196f3;
+        --warning: #ff9800;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+
+      body {
+        background-color: #f9f9f9;
+        color: var(--dark-gray);
+        line-height: 1.6;
+      }
+
+      .dashboard-container {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* Sidebar consistente */
+      .sidebar {
+        width: 280px;
+        background: linear-gradient(
+          180deg,
+          var(--primary),
+          var(--primary-light)
+        );
+        color: white;
+        padding: 20px 0;
+        position: fixed;
+        height: 100vh;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .logo img {
+        width: 50px;
+        height: 50px;
+        margin-right: 15px;
+        object-fit: contain;
+      }
+
+      .logo h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+      }
+
+      nav ul {
+        list-style: none;
+        margin-top: 30px;
+      }
+
+      nav ul li {
+        padding: 0;
+      }
+
+      .nav-link {
+        color: white;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        padding: 15px 25px;
+        transition: all 0.3s;
+      }
+
+      nav ul li i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+      }
+
+      nav ul li:hover:not(.active) {
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      nav ul li.active {
+        background: rgba(255, 255, 255, 0.15);
+        border-left: 3px solid var(--secondary);
+      }
+
+      /* Contenido principal */
+      .content {
+        flex: 1;
+        margin-left: 280px;
+        padding: 30px;
+        background-color: #f5f7fa;
+      }
+
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Filtros */
+      .report-controls {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+        gap: 20px;
+      }
+
+      .filter-group {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+      }
+
+      select,
+      input {
+        padding: 10px 15px;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        font-size: 0.9rem;
+        background: white;
+      }
+
+      /* Botones */
+      button {
+        padding: 10px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+      }
+
+      .primary-btn {
+        background: var(--primary);
+        color: white;
+      }
+
+      .primary-btn:hover {
+        background: var(--primary-light);
+      }
+
+      .secondary-btn {
+        background: var(--gray);
+        color: var(--dark-gray);
+      }
+
+      .secondary-btn:hover {
+        background: #e0e0e0;
+      }
+
+      /* Tarjetas de resumen */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .stat-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--primary);
+      }
+
+      .stat-card h3 {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 10px;
+        font-weight: 500;
+      }
+
+      .stat-card p {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--dark-gray);
+      }
+
+      /* Gráficos */
+      .charts-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .chart-card {
+        background: white;
+        border-radius: 10px;
+        padding: 25px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      }
+
+      .chart-card h3 {
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      /* Tabla de reportes */
+      .reports-table-container {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        overflow-x: auto;
+        margin-bottom: 30px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+      }
+
+      th {
+        background: var(--gray);
+        font-weight: 600;
+        color: var(--dark-gray);
+      }
+
+      tr:hover {
+        background: #f9f9f9;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      .badge-completed {
+        background: #e8f5e9;
+        color: var(--success);
+      }
+
+      .badge-pending {
+        background: #fff3e0;
+        color: var(--warning);
+      }
+
+      .badge-processing {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      /* Acciones */
+      .action-btn {
+        padding: 5px 10px;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        margin-right: 5px;
+        font-size: 0.85rem;
+        transition: all 0.3s;
+      }
+
+      .view-btn {
+        background: #e3f2fd;
+        color: var(--info);
+      }
+
+      .download-btn {
+        background: #e8f5e9;
+        color: var(--success);
+      }
+
+      /* Responsive */
+      @media (max-width: 1200px) {
+        .charts-container {
+          grid-template-columns: 1fr;
+        }
+
+        .content {
+          padding: 20px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+        }
+
+        .content {
+          margin-left: 0;
+        }
+
+        nav ul {
+          display: flex;
+          overflow-x: auto;
+          padding-bottom: 10px;
+        }
+
+        nav ul li {
+          white-space: nowrap;
+        }
+
+        .logo {
+          justify-content: center;
+        }
+
+        .logo h2 {
+          display: none;
+        }
+
+        .report-controls {
+          flex-direction: column;
+        }
+
+        .filter-group {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-container">
+      <!-- Sidebar consistente -->
+      <aside class="sidebar">
+        <div class="logo">
+          <img src="img/tlaxcala.png" alt="Escudo Tlaxcala" />
+          <h2>PANEL DE CONTROL</h2>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="dashboard.html" class="nav-link">
+                <i class="ri-dashboard-line"></i> Dashboard
+              </a>
+            </li>
+            <li>
+              <a href="denuncias_panel.html" class="nav-link">
+                <i class="ri-alarm-warning-line"></i> Denuncias
+              </a>
+            </li>
+            <li>
+              <a href="usuarios.html" class="nav-link">
+                <i class="ri-user-settings-line"></i> Usuarios
+              </a>
+            </li>
+            <li class="active">
+              <a href="reportes.html" class="nav-link">
+                <i class="ri-file-chart-line"></i> Reportes
+              </a>
+            </li>
+            <li>
+              <a href="configuracion.html" class="nav-link">
+                <i class="ri-settings-3-line"></i> Configuración
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <header>
+          <h1><i class="ri-file-chart-line"></i> Reportes Estadísticos</h1>
+          <button class="primary-btn" id="generateReportBtn">
+            <i class="ri-file-add-line"></i> Generar Reporte
+          </button>
+        </header>
+
+        <!-- Controles de filtrado -->
+        <div class="report-controls">
+          <div class="filter-group">
+            <select id="reportType">
+              <option>Todos los reportes</option>
+              <option>Denuncias</option>
+              <option>Usuarios</option>
+              <option>Escuelas</option>
+            </select>
+            <select id="timeRange">
+              <option>Últimos 7 días</option>
+              <option>Últimos 30 días</option>
+              <option>Este mes</option>
+              <option>Este año</option>
+              <option>Personalizado</option>
+            </select>
+            <input type="date" id="startDate" />
+            <input type="date" id="endDate" />
+          </div>
+          <button class="secondary-btn">
+            <i class="ri-download-line"></i> Exportar Datos
+          </button>
+        </div>
+
+        <!-- Resumen estadístico -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3>Reportes generados</h3>
+            <p>24</p>
+          </div>
+          <div class="stat-card">
+            <h3>Denuncias este mes</h3>
+            <p>156</p>
+          </div>
+          <div class="stat-card">
+            <h3>Escuelas reportadas</h3>
+            <p>42</p>
+          </div>
+          <div class="stat-card">
+            <h3>Tiempo promedio respuesta</h3>
+            <p>3.2 días</p>
+          </div>
+        </div>
+
+        <!-- Gráficos estadísticos -->
+        <div class="charts-container">
+          <div class="chart-card">
+            <h3><i class="ri-bar-chart-2-line"></i> Denuncias por municipio</h3>
+            <canvas id="municipiosChart"></canvas>
+          </div>
+          <div class="chart-card">
+            <h3><i class="ri-pie-chart-2-line"></i> Tipos de denuncias</h3>
+            <canvas id="tiposDenunciasChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Tabla de reportes -->
+        <div class="reports-table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Tipo</th>
+                <th>Fecha generación</th>
+                <th>Periodo</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>REP-2023-001</td>
+                <td>Reporte mensual de denuncias</td>
+                <td>Denuncias</td>
+                <td>15/05/2023</td>
+                <td>Mayo 2023</td>
+                <td><span class="badge badge-completed">Completado</span></td>
+                <td>
+                  <button class="action-btn view-btn">
+                    <i class="ri-eye-line"></i> Ver
+                  </button>
+                  <button class="action-btn download-btn">
+                    <i class="ri-download-line"></i> Descargar
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>REP-2023-002</td>
+                <td>Análisis de usuarios activos</td>
+                <td>Usuarios</td>
+                <td>10/05/2023</td>
+                <td>Abril 2023</td>
+                <td><span class="badge badge-completed">Completado</span></td>
+                <td>
+                  <button class="action-btn view-btn">
+                    <i class="ri-eye-line"></i> Ver
+                  </button>
+                  <button class="action-btn download-btn">
+                    <i class="ri-download-line"></i> Descargar
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>REP-2023-003</td>
+                <td>Reporte de infraestructura escolar</td>
+                <td>Escuelas</td>
+                <td>05/05/2023</td>
+                <td>Trimestre 1</td>
+                <td><span class="badge badge-completed">Completado</span></td>
+                <td>
+                  <button class="action-btn view-btn">
+                    <i class="ri-eye-line"></i> Ver
+                  </button>
+                  <button class="action-btn download-btn">
+                    <i class="ri-download-line"></i> Descargar
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>REP-2023-004</td>
+                <td>Reporte semanal de denuncias</td>
+                <td>Denuncias</td>
+                <td>14/05/2023</td>
+                <td>Semana 19</td>
+                <td><span class="badge badge-processing">Procesando</span></td>
+                <td>
+                  <button class="action-btn view-btn" disabled>
+                    <i class="ri-eye-line"></i> Ver
+                  </button>
+                  <button class="action-btn download-btn" disabled>
+                    <i class="ri-download-line"></i> Descargar
+                  </button>
+                </td>
+              </tr>
+              <tr>
+                <td>REP-2023-005</td>
+                <td>Análisis de tiempos de respuesta</td>
+                <td>Denuncias</td>
+                <td>12/05/2023</td>
+                <td>Año 2023</td>
+                <td><span class="badge badge-pending">Pendiente</span></td>
+                <td>
+                  <button class="action-btn view-btn" disabled>
+                    <i class="ri-eye-line"></i> Ver
+                  </button>
+                  <button class="action-btn download-btn" disabled>
+                    <i class="ri-download-line"></i> Descargar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Resaltar elemento activo en el menú
+        const currentPage = location.pathname.split("/").pop();
+        const navLinks = document.querySelectorAll(".nav-link");
+
+        navLinks.forEach((link) => {
+          if (link.getAttribute("href") === currentPage) {
+            link.parentElement.classList.add("active");
+          } else {
+            link.parentElement.classList.remove("active");
+          }
+        });
+
+        // Configurar gráficos
+        const municipiosCtx = document
+          .getElementById("municipiosChart")
+          .getContext("2d");
+        const municipiosChart = new Chart(municipiosCtx, {
+          type: "bar",
+          data: {
+            labels: [
+              "Tlaxcala",
+              "Apizaco",
+              "Huamantla",
+              "Chiautempan",
+              "Contla",
+              "Calpulalpan",
+            ],
+            datasets: [
+              {
+                label: "Denuncias",
+                data: [45, 38, 29, 22, 15, 10],
+                backgroundColor: "rgba(106, 27, 154, 0.7)",
+                borderColor: "rgba(106, 27, 154, 1)",
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        });
+
+        const tiposDenunciasCtx = document
+          .getElementById("tiposDenunciasChart")
+          .getContext("2d");
+        const tiposDenunciasChart = new Chart(tiposDenunciasCtx, {
+          type: "doughnut",
+          data: {
+            labels: [
+              "Bullying",
+              "Infraestructura",
+              "Maltrato docente",
+              "Corrupción",
+              "Otros",
+            ],
+            datasets: [
+              {
+                data: [35, 25, 20, 15, 5],
+                backgroundColor: [
+                  "rgba(106, 27, 154, 0.7)",
+                  "rgba(156, 39, 176, 0.7)",
+                  "rgba(255, 171, 0, 0.7)",
+                  "rgba(76, 175, 80, 0.7)",
+                  "rgba(33, 150, 243, 0.7)",
+                ],
+                borderColor: [
+                  "rgba(106, 27, 154, 1)",
+                  "rgba(156, 39, 176, 1)",
+                  "rgba(255, 171, 0, 1)",
+                  "rgba(76, 175, 80, 1)",
+                  "rgba(33, 150, 243, 1)",
+                ],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        });
+
+        // Simular generación de reporte
+        document
+          .getElementById("generateReportBtn")
+          .addEventListener("click", function () {
+            alert(
+              "Se ha iniciado la generación de un nuevo reporte. Se le notificará cuando esté listo."
+            );
+          });
+
+        // Mostrar/ocultar fechas personalizadas
+        document
+          .getElementById("timeRange")
+          .addEventListener("change", function () {
+            const showDates = this.value === "Personalizado";
+            document.getElementById("startDate").style.display = showDates
+              ? "block"
+              : "none";
+            document.getElementById("endDate").style.display = showDates
+              ? "block"
+              : "none";
+          });
+
+        // Simular cambio de estado de reportes
+        setInterval(() => {
+          const processingBadges =
+            document.querySelectorAll(".badge-processing");
+          processingBadges.forEach((badge) => {
+            if (Math.random() > 0.7) {
+              badge.className = "badge badge-completed";
+              badge.textContent = "Completado";
+              const row = badge.closest("tr");
+              row.querySelectorAll("button").forEach((btn) => {
+                btn.disabled = false;
+              });
+            }
+          });
+
+          const pendingBadges = document.querySelectorAll(".badge-pending");
+          pendingBadges.forEach((badge) => {
+            if (Math.random() > 0.9) {
+              badge.className = "badge badge-processing";
+              badge.textContent = "Procesando";
+            }
+          });
+        }, 5000);
+      });
+    </script>
+  </body>
+</html>
